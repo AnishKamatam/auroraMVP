@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import LoginModal from '../components/LoginModal'
+import SignupModal from '../components/SignupModal'
 
 const Home: React.FC = () => {
   const { user, signOut } = useAuth()
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
 
   const handleLogout = async () => {
     try {
@@ -29,12 +31,20 @@ const Home: React.FC = () => {
               Log Out
             </button>
           ) : (
-            <button 
-              onClick={() => setIsLoginModalOpen(true)} 
-              className="auth-button"
-            >
-              Login
-            </button>
+            <div className="auth-buttons">
+              <button 
+                onClick={() => setIsLoginModalOpen(true)} 
+                className="auth-button"
+              >
+                Login
+              </button>
+              <button 
+                onClick={() => setIsSignupModalOpen(true)} 
+                className="auth-button auth-button-secondary"
+              >
+                Sign Up
+              </button>
+            </div>
           )}
         </div>
       </header>
@@ -66,6 +76,13 @@ const Home: React.FC = () => {
       <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 
+      />
+
+      {/* Signup Modal */}
+      <SignupModal 
+        isOpen={isSignupModalOpen} 
+        onClose={() => setIsSignupModalOpen(false)} 
+        onSwitchToLogin={() => setIsLoginModalOpen(true)}
       />
     </div>
   )

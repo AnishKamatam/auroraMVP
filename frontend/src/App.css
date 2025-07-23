@@ -53,6 +53,12 @@
   letter-spacing: 0.1em;
 }
 
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
 .auth-button {
   background: #ffffff;
   border: 1px solid #000000;
@@ -67,6 +73,15 @@
 .auth-button:hover {
   background: #000000;
   color: #ffffff;
+}
+
+.auth-button-secondary {
+  background: #000000;
+  color: #ffffff;
+}
+
+.auth-button-secondary:hover {
+  background: #333333;
 }
 
 /* Main Content Styles */
