@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import './App.css'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
+import MindMapEditor from './pages/MindMapEditor'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 
 // Protected Route Component
@@ -30,6 +31,11 @@ function App() {
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/mindmap/:mindMapId" element={
+              <ProtectedRoute>
+                <MindMapEditor />
               </ProtectedRoute>
             } />
           </Routes>

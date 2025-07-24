@@ -465,6 +465,374 @@
   color: #000000;
 }
 
+.card-header {
+  height: 80px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: -1.5rem -1.5rem 1rem -1.5rem;
+  position: relative;
+}
+
+.card-icon {
+  color: #ffffff;
+}
+
+.delete-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #666666;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.delete-button:hover {
+  background: #ff4444;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.mind-map-card:hover .delete-button {
+  opacity: 1;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: #666666;
+}
+
+.node-count {
+  font-weight: 500;
+}
+
+.last-modified {
+  color: #999999;
+}
+
+/* Mind Map Editor Styles */
+.mind-map-editor {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e5e5;
+  background: #ffffff;
+  z-index: 100;
+}
+
+.editor-header .header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666666;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.back-button:hover {
+  background: #f5f5f5;
+}
+
+.editor-header .logo {
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+
+.title-input {
+  border: none;
+  outline: none;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #000000;
+  background: transparent;
+  min-width: 200px;
+}
+
+.star-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #cccccc;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.star-button:hover {
+  color: #ffd700;
+}
+
+.node-count {
+  font-size: 0.875rem;
+  color: #666666;
+  margin-left: 1rem;
+}
+
+.editor-header .header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatars {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.user-avatars .user-avatar {
+  width: 32px;
+  height: 32px;
+  background: #000000;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.share-button {
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.share-button:hover {
+  background: #333333;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666666;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.menu-button:hover {
+  background: #f5f5f5;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid #e5e5e5;
+  background: #ffffff;
+}
+
+.tool-button {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #666666;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.tool-button:hover {
+  background: #f5f5f5;
+  border-color: #000000;
+}
+
+.tool-button.active {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-image: 
+    radial-gradient(circle, #e5e5e5 1px, transparent 1px);
+  background-size: 20px 20px;
+  cursor: crosshair;
+  transform-origin: center;
+}
+
+.mind-map-node {
+  position: absolute;
+  background: #000000;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  min-width: 120px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mind-map-node.central {
+  background: #000000;
+  font-weight: 600;
+}
+
+.mind-map-node.idea {
+  background: #333333;
+}
+
+.instruction-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #666666;
+  pointer-events: none;
+}
+
+.instruction-overlay h3 {
+  margin: 1rem 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+.instruction-overlay p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.right-controls {
+  position: absolute;
+  top: 6rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 100;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-button {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #666666;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.control-button:hover {
+  background: #f5f5f5;
+  border-color: #000000;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-level {
+  font-size: 0.75rem;
+  color: #666666;
+  min-width: 40px;
+  text-align: center;
+}
+
+.help-button {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.help-button:hover {
+  background: #333333;
+  transform: scale(1.05);
+}
+
 /* Footer Styles */
 .footer {
   position: fixed;
@@ -625,6 +993,66 @@
 
 .link-button:hover {
   color: #333333;
+}
+
+/* Delete Modal Styles */
+.delete-modal {
+  max-width: 400px;
+  text-align: center;
+}
+
+.delete-modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.delete-icon {
+  width: 48px;
+  height: 48px;
+  background: #ff4444;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+.delete-modal-message {
+  color: #666666;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+.delete-modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-danger {
+  background: #ff4444;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-danger:hover {
+  background: #ff2222;
 }
 
 /* Responsive Design */

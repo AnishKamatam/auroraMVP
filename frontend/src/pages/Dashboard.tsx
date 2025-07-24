@@ -1,15 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { GiBrain } from 'react-icons/gi'
+import { mindMapService, MindMap } from '../services/mindMapService'
+import DeleteConfirmModal from '../components/DeleteConfirmModal'
 
 const Dashboard: React.FC = () => {
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
+  const [mindMaps, setMindMaps] = useState<MindMap[]>([])
+  const [loading, setLoading] = useState(true)
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean
+    mindMapId: string | null
+    mindMapTitle: string
+  }>({
+    isOpen: false,
+    mindMapId: null,
+    mindMapTitle: ''
+  })
 
   const handleLogout = async () => {
     try {
@@ -20,10 +34,76 @@ const Dashboard: React.FC = () => {
     }
   }
 
-  const handleCreateNewMindMap = () => {
-    // TODO: Implement mind map creation
-    console.log('Create new mind map')
+  const handleCreateNewMindMap = async () => {
+    try {
+      // Create a new mind map immediately
+      const newMindMap = await mindMapService.createMindMap('Untitled mind map', [])
+      console.log('Created new mind map:', newMindMap)
+      // Navigate to the new mind map
+      navigate(`/mindmap/${newMindMap.id}`)
+    } catch (error) {
+      console.error('Error creating new mind map:', error)
+    }
   }
+
+  const handleDeleteMindMap = async (mindMapId: string, mindMapTitle: string) => {
+    setDeleteModal({
+      isOpen: true,
+      mindMapId,
+      mindMapTitle
+    })
+  }
+
+  const confirmDelete = async () => {
+    if (!deleteModal.mindMapId) return
+
+    try {
+      await mindMapService.deleteMindMap(deleteModal.mindMapId)
+      // Remove the mind map from the local state
+      setMindMaps(mindMaps.filter(mindMap => mindMap.id !== deleteModal.mindMapId))
+      console.log('Mind map deleted successfully')
+    } catch (error) {
+      console.error('Error deleting mind map:', error)
+      alert('Failed to delete mind map. Please try again.')
+    }
+  }
+
+  // Load user's mind maps
+  useEffect(() => {
+    const loadMindMaps = async () => {
+      try {
+        console.log('Loading mind maps for user:', user?.id)
+        const data = await mindMapService.getUserMindMaps()
+        console.log('Loaded mind maps:', data)
+        setMindMaps(data)
+      } catch (error) {
+        console.error('Error loading mind maps:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (user) {
+      loadMindMaps()
+    }
+  }, [user])
+
+  // Reload mind maps when returning to dashboard
+  useEffect(() => {
+    if (user && location.pathname === '/dashboard') {
+      const loadMindMaps = async () => {
+        try {
+          console.log('Reloading mind maps on dashboard return')
+          const data = await mindMapService.getUserMindMaps()
+          console.log('Reloaded mind maps:', data)
+          setMindMaps(data)
+        } catch (error) {
+          console.error('Error loading mind maps:', error)
+        }
+      }
+      loadMindMaps()
+    }
+  }, [user, location.pathname])
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -40,7 +120,8 @@ const Dashboard: React.FC = () => {
   }, [])
 
   return (
-    <div className="dashboard">
+    <>
+      <div className="dashboard">
       {/* Header */}
       <header className="dashboard-header">
         <div className="header-left">
@@ -131,9 +212,46 @@ const Dashboard: React.FC = () => {
                     <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/>
                   </svg>
                 </div>
-                <div className="card-title">Start a new mind map</div>
+                <div className="card-title">Add new</div>
               </div>
             </div>
+            
+            {mindMaps.map((mindMap) => (
+              <div 
+                key={mindMap.id} 
+                className="mind-map-card" 
+              >
+                <div className="card-header">
+                  <div className="card-icon">
+                    <GiBrain size={24} />
+                  </div>
+                  <button 
+                    className="delete-button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDeleteMindMap(mindMap.id, mindMap.title)
+                    }}
+                    title="Delete mind map"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </div>
+                <div 
+                  className="card-content"
+                  onClick={() => navigate(`/mindmap/${mindMap.id}`)}
+                >
+                  <div className="card-title">{mindMap.title}</div>
+                  <div className="card-meta">
+                    <span className="node-count">{mindMap.nodes.length} nodes</span>
+                    <span className="last-modified">
+                      {new Date(mindMap.updated_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </main>
@@ -142,7 +260,16 @@ const Dashboard: React.FC = () => {
       <footer className="footer">
         <div className="help-icon">?</div>
       </footer>
-    </div>
+      </div>
+
+      <DeleteConfirmModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, mindMapId: null, mindMapTitle: '' })}
+        onConfirm={confirmDelete}
+        title="Delete Mind Map"
+        message={`Are you sure you want to delete "${deleteModal.mindMapTitle}"? This action cannot be undone.`}
+      />
+    </>
   )
 }
 

@@ -66,7 +66,7 @@ const Home: React.FC = () => {
             <p>From voice to vision, instantly.</p>
           </div>
           <div className="hero-buttons">
-            <button className="btn-primary">
+            <button className="btn-primary" onClick={() => setIsSignupModalOpen(true)}>
               Get Started
             </button>
             <button className="btn-secondary">
