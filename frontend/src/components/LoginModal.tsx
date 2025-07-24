@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -7,6 +8,8 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
@@ -14,6 +17,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [error, setError] = useState('')
   
   const { signIn, signUp } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,11 +26,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
     try {
       if (isSignUp) {
-        await signUp(email, password)
+        await signUp(email, password, { firstName, lastName })
         setError('Check your email for confirmation link!')
       } else {
         await signIn(email, password)
         onClose()
+        navigate('/dashboard')
       }
     } catch (err: any) {
       setError(err.message)
@@ -45,6 +50,32 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         <h2>{isSignUp ? 'Sign Up' : 'Log In'}</h2>
         
         <form onSubmit={handleSubmit}>
+          {isSignUp && (
+            <>
+              <div className="form-group">
+                <label htmlFor="firstName">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="lastName">Last Name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
+            </>
+          )}
+          
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input

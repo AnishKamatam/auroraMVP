@@ -1,12 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 import LoginModal from '../components/LoginModal'
 import SignupModal from '../components/SignupModal'
 
 const Home: React.FC = () => {
   const { user, signOut } = useAuth()
+  const navigate = useNavigate()
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
+
+  // Redirect to dashboard if user is already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard')
+    }
+  }, [user, navigate])
 
   const handleLogout = async () => {
     try {

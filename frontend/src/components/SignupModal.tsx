@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 interface SignupModalProps {
   isOpen: boolean
@@ -8,12 +9,15 @@ interface SignupModalProps {
 }
 
 const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose, onSwitchToLogin }) => {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   
   const { signUp } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,8 +25,10 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose, onSwitchToLo
     setError('')
 
     try {
-      await signUp(email, password)
+      await signUp(email, password, { firstName, lastName })
       setError('Check your email for confirmation link!')
+      // Note: For email confirmation, we don't redirect immediately
+      // User needs to confirm email first
     } catch (err: any) {
       // Handle specific Supabase error for existing user
       if (err.message && err.message.includes('already registered')) {
@@ -49,6 +55,28 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose, onSwitchToLo
         <h2>Sign Up</h2>
         
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="firstName">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </div>
+          
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
